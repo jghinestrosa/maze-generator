@@ -9,8 +9,8 @@ var MazeGenerator = (function() {
     cellSize: 40,
 
     init: function(width, height) {
-      this.columns = width / cellSize;
-      this.rows = height / cellSize; 
+      this.columns = width / this.cellSize;
+      this.rows = height / this.cellSize; 
     },
 
     getAdjacentCells: function(i, j) {
@@ -18,34 +18,22 @@ var MazeGenerator = (function() {
 
       // Up
       if (i - 1 >= 0) {
-        //if (!isCellInMaze(i - 1, j)) {
-          //adjacentCells.push(this.cellToString(i - 1, j));
-          adjacentCells.push([i - 1, j]);
-        //}
+        adjacentCells.push([i - 1, j]);
       } 
 
       // Down
       if (i + 1 < this.rows) {
-        //if (!isCellInMaze(i + 1, j)) {
-          //adjacentCells.push(this.cellToString(i + 1, j));
-          adjacentCells.push([i + 1, j]);
-        //}
+        adjacentCells.push([i + 1, j]);
       }
 
       // Left
       if (j - 1 >= 0) {
-        //if (!isCellInMaze(i, j - 1)) {
-          //adjacentCells.push(this.cellToString(i, j - 1));
-          adjacentCells.push([i, j - 1]);
-        //}
+        adjacentCells.push([i, j - 1]);
       }
 
       // Right
       if (j + 1 < this.columns) {
-        //if (!isCellInMaze(i, j + 1)) {
-          //adjacentCells.push(this.cellToString(i, j + 1));
-          adjacentCells.push([i, j + 1]);
-        //}
+        adjacentCells.push([i, j + 1]);
       }
 
       return adjacentCells;
@@ -82,8 +70,6 @@ var MazeGenerator = (function() {
     },
 
     pickFrontierCell: function() {
-      //return Math.floor((Math.random() * frontierList.length));
-      //return frontierList[Math.floor((Math.random() * frontierList.length))];
       return frontierList[this.pickRandomCell(frontierList)];
     },
 
@@ -98,7 +84,6 @@ var MazeGenerator = (function() {
     },
 
     isCellInMaze: function(i, j) {
-      //return maze[this.cellToString(i, j)];
       if (maze[this.cellToString(i, j)]) {
         return true;
       }
@@ -107,7 +92,6 @@ var MazeGenerator = (function() {
     },
 
     isCellInFrontier: function(i, j) {
-      //return frontierList[this.cellToString(i, j)];
       if (frontier[this.cellToString(i, j)]) {
         return true;
       }
@@ -116,7 +100,6 @@ var MazeGenerator = (function() {
     },
 
     removeFromFrontier: function(key) {
-      //var cellString = this.cellToString(i, j);
       delete frontier[key];
       frontierList.splice(frontierList.indexOf(key), 1);
     },
@@ -124,7 +107,7 @@ var MazeGenerator = (function() {
     removeCellsNotInMaze: function(cells) {
       var cellsInMaze = [];
       cells.forEach(function(cell) {
-        if (isCellInMaze(cell[0], cell[1])) {
+        if (mazeGenerator.isCellInMaze(cell[0], cell[1])) {
           cellsInMaze.push(cell);
         }
       }); 
@@ -133,7 +116,7 @@ var MazeGenerator = (function() {
     },
 
     joinTwoCellsFromMaze: function(cellFrom, cellTo) {
-      this.getCellFromMaze(cellFrom[i], cellFrom[j]).push(cellTo);
+      this.getCellFromMaze(cellFrom[0], cellFrom[1]).push(cellTo);
     },
 
     generate: function() {
@@ -155,8 +138,8 @@ var MazeGenerator = (function() {
         
         // Get adjacent cells of new cell picked from frontier and join it to a previous cell from maze
         adjacentCells = this.getAdjacentCells(chosenCellFromFrontier[0], chosenCellFromFrontier[1]);
-        var adjacentCellsInMaze = removeCellsNotInMaze(adjacentCells);
-        var cellFromMaze = this.pickRandomCell(adjacentCellsInMaze);
+        var adjacentCellsInMaze = this.removeCellsNotInMaze(adjacentCells);
+        var cellFromMaze = adjacentCellsInMaze[this.pickRandomCell(adjacentCellsInMaze)];
         this.joinTwoCellsFromMaze(cellFromMaze, chosenCellFromFrontier);
 
         // Add the cell from frontier to the maze and add new cells to frontier
@@ -164,8 +147,14 @@ var MazeGenerator = (function() {
         this.addAdjacentCellsToFrontier(adjacentCells);
       }
 
+    },
+
+    getMaze: function() {
+      return maze;
     }
 
   };
+
+  return mazeGenerator;
 
 }());
