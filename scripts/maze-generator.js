@@ -138,7 +138,7 @@ var MazeGenerator = (function() {
 
       // Paint the first cell and its frontier if a callback is provided
       if (callback) {
-        this.callPaintingCallback(callback, initialCell, frontier);
+        this.callPaintingCallback(callback, this.cellSize, initialCell, frontier);
       }
 
       while (frontierList.length !== 0) {
@@ -162,10 +162,10 @@ var MazeGenerator = (function() {
         if (callback) {
           if (adjacentCellsInMaze.length > 1) {
             adjacentCellsInMaze.splice(adjacentCellsInMaze.indexOf(cellFromMaze), 1);
-            this.callPaintingCallback(callback, chosenCellFromFrontier, frontier, adjacentCellsInMaze);
+            this.callPaintingCallback(callback, this.cellSize, chosenCellFromFrontier, frontier, adjacentCellsInMaze);
           }
           else {
-            this.callPaintingCallback(callback, chosenCellFromFrontier, frontier);
+            this.callPaintingCallback(callback, this.cellSize, chosenCellFromFrontier, frontier);
           }
         }
       }
@@ -173,8 +173,8 @@ var MazeGenerator = (function() {
     },
 
     // TODO: Decide if this method should be private or not
-    callPaintingCallback: function(callback, cellToPaint, frontier, cellsNotConnected) {
-      callback(cellToPaint, frontier, cellsNotConnected);
+    callPaintingCallback: function(callback, cellSize, cellToPaint, frontier, cellsNotConnected) {
+      callback(cellSize, cellToPaint, frontier, cellsNotConnected);
     },
 
     getMaze: function() {
