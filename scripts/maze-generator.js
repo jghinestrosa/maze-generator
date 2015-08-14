@@ -1,8 +1,12 @@
 var MazeGenerator = (function() {
 
-  var frontier = {};
-  var frontierList = [];
   var maze = {};
+  var frontier = {};
+
+  // In order to avoid Object.keys() to create a new array
+  // in mazeGenerator.generate() for each iteration 
+  // TODO: Maybe find a better alternative
+  var frontierList = [];
 
   var mazeGenerator = {
 
