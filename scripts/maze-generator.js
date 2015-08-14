@@ -4,7 +4,7 @@ var MazeGenerator = (function() {
   var frontierList = [];
   var maze = {};
 
-  mazeGenerator = {
+  var mazeGenerator = {
 
     cellSize: 40,
 
