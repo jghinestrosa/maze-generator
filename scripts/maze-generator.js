@@ -6,11 +6,14 @@ var MazeGenerator = (function() {
 
   var mazeGenerator = {
 
-    cellSize: 40,
-
-    init: function(width, height) {
+    init: function(width, height, cellSize) {
+      this.cellSize = cellSize;
       this.columns = width / this.cellSize;
       this.rows = height / this.cellSize; 
+
+      maze = {};
+      frontierList = [];
+      frontier = {};
     },
 
     getAdjacentCells: function(i, j) {
