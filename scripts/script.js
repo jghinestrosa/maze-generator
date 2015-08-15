@@ -1,4 +1,5 @@
 (function(document, MazeGenerator, MazePainter) {
+  'use strict';
 
   // DOM Elements
   var canvas = document.getElementById('maze');

@@ -1,4 +1,5 @@
 var MazePainter = (function(window, MazeGenerator) {
+  'use strict';
   
   var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 

@@ -1,4 +1,5 @@
 var MazeGenerator = (function() {
+  'use strict';
 
   var maze = {};
   var frontier = {};
