@@ -11,9 +11,11 @@
   button.addEventListener('click', function() {
 
     // Initialize modules
-    MazeGenerator.init(canvas.width, canvas.height, 60);
+    MazeGenerator.init(canvas.width, canvas.height, 10);
     MazePainter.init(canvas, '#fff', '#f00', '#000');
-    MazeGenerator.generate(callback);
+    MazePainter.startPainting();
+    MazeGenerator.generate();
+    //MazeGenerator.generate(callback);
   });
 
 }(document, MazeGenerator, MazePainter));

@@ -1,4 +1,8 @@
-var MazePainter = (function() {
+var MazePainter = (function(window, MazeGenerator) {
+  
+  var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+  window.requestAnimationFrame = requestAnimationFrame;
 
   var mazePainter = {
     
@@ -20,6 +24,14 @@ var MazePainter = (function() {
       this.ctx.stroke();
     },
 
+    startPainting: function() {
+      if (MazeGenerator.exposedForPainting.length > 0) {
+        var exposed = MazeGenerator.exposedForPainting.shift();
+        this.paint(exposed.cellSize, exposed.cellToPaint, exposed.frontier, exposed.walls);
+      }
+      window.requestAnimationFrame(this.startPainting.bind(this));
+    },
+
     paint: function(cellSize, cellToPaint, frontier, cellsNotConnected) {
 
       var xCellToPaint = this.getX(cellToPaint[1], cellSize);
@@ -29,10 +41,12 @@ var MazePainter = (function() {
       this.ctx.fillStyle = this.cellColor;
       this.ctx.fillRect(xCellToPaint, yCellToPaint, cellSize, cellSize);
 
+
       // Paint the frontier
       this.ctx.fillStyle = this.frontierColor;
       Object.keys(frontier).forEach(function(key) {
 
+        console.log(this.frontierColor);
         this.ctx.fillRect(this.getX(frontier[key][1], cellSize), this.getY(frontier[key][0], cellSize), cellSize, cellSize);
       }.bind(this));
 
@@ -63,8 +77,6 @@ var MazePainter = (function() {
             this.drawLine(xCellToPaint + cellSize, yCellToPaint, xCellToPaint + cellSize, yCellToPaint + cellSize);
           }
 
-
-
         }.bind(this));
 
       }
@@ -87,4 +99,4 @@ var MazePainter = (function() {
   return mazePainter;
 
 
-}());
+}(window, MazeGenerator));

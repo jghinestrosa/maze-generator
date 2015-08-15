@@ -15,6 +15,8 @@ var MazeGenerator = (function() {
       this.columns = width / this.cellSize;
       this.rows = height / this.cellSize; 
 
+      this.exposedForPainting = [];
+
       maze = {};
       frontierList = [];
       frontier = {};
@@ -136,10 +138,7 @@ var MazeGenerator = (function() {
       var adjacentCells = this.getAdjacentCells(initialCell[0], initialCell[1]);
       this.addAdjacentCellsToFrontier(adjacentCells);
 
-      // Paint the first cell and its frontier if a callback is provided
-      if (callback) {
-        this.callPaintingCallback(callback, this.cellSize, initialCell, frontier);
-      }
+      this.exposedForPainting.push({cellSize: this.cellSize, cellToPaint: initialCell, frontier: frontier, walls: null});
 
       while (frontierList.length !== 0) {
 
@@ -158,23 +157,15 @@ var MazeGenerator = (function() {
         this.addCellToMaze(chosenCellFromFrontier[0], chosenCellFromFrontier[1]);
         this.addAdjacentCellsToFrontier(adjacentCells);
 
-        // Paint step by step if a callback is provided
-        if (callback) {
-          if (adjacentCellsInMaze.length > 1) {
-            adjacentCellsInMaze.splice(adjacentCellsInMaze.indexOf(cellFromMaze), 1);
-            this.callPaintingCallback(callback, this.cellSize, chosenCellFromFrontier, frontier, adjacentCellsInMaze);
-          }
-          else {
-            this.callPaintingCallback(callback, this.cellSize, chosenCellFromFrontier, frontier);
-          }
+
+        if (adjacentCellsInMaze.length > 1) {
+          adjacentCellsInMaze.splice(adjacentCellsInMaze.indexOf(cellFromMaze), 1);
+          this.exposedForPainting.push({cellSize: this.cellSize, cellToPaint: chosenCellFromFrontier, frontier: frontier, walls: adjacentCellsInMaze});
+        }
+        else {
+          this.exposedForPainting.push({cellSize: this.cellSize, cellToPaint: chosenCellFromFrontier, frontier: frontier, walls: null});
         }
       }
-
-    },
-
-    // TODO: Decide if this method should be private or not
-    callPaintingCallback: function(callback, cellSize, cellToPaint, frontier, cellsNotConnected) {
-      callback(cellSize, cellToPaint, frontier, cellsNotConnected);
     },
 
     getMaze: function() {
