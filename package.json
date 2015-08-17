@@ -1,0 +1,20 @@
+{
+  "name": "maze-generator",
+  "version": "1.0.0",
+  "description": "A web application that generates random mazes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jghinestrosa/maze-generator.git"
+  },
+  "keywords": [
+    "maze",
+    "generator",
+    "prim"
+  ],
+  "author": "Jorge García Hinestrosa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jghinestrosa/maze-generator/issues"
+  },
+  "homepage": "https://github.com/jghinestrosa/maze-generator#readme"
+}
