@@ -67,7 +67,6 @@ var MazeGenerator = (function() {
     },
 
     addCellToMaze: function(i, j) {
-      //maze.push(this.cellToString(i, j));
       maze[this.cellToString(i, j)] = [];
     },
 
@@ -129,7 +128,7 @@ var MazeGenerator = (function() {
       this.getCellFromMaze(cellFrom[0], cellFrom[1]).push(cellTo);
     },
 
-    generate: function(callback) {
+    generate: function() {
 
       // Pick an initial cell and add it to the maze
       var initialCell = this.pickInitialCell();
