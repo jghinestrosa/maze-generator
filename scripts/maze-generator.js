@@ -11,10 +11,19 @@ var MazeGenerator = (function() {
 
   var mazeGenerator = {
 
+    exposedForPainting: [],
+
+    solution: [],
+
     init: function(width, height, cellSize) {
       this.cellSize = cellSize;
       this.columns = width / this.cellSize;
       this.rows = height / this.cellSize; 
+
+      this.entry = [];
+      this.exit = [];
+
+      this.solution = [];
 
       this.exposedForPainting = [];
 
@@ -67,7 +76,11 @@ var MazeGenerator = (function() {
     },
 
     addCellToMaze: function(i, j) {
-      maze[this.cellToString(i, j)] = [];
+      //maze[this.cellToString(i, j)] = [];
+      maze[this.cellToString(i, j)] = {
+        children: [],
+        parent: null
+      };
     },
 
     getCellFromMaze: function(i, j) {
@@ -125,7 +138,9 @@ var MazeGenerator = (function() {
     },
 
     joinTwoCellsFromMaze: function(cellFrom, cellTo) {
-      this.getCellFromMaze(cellFrom[0], cellFrom[1]).push(cellTo);
+      //this.getCellFromMaze(cellFrom[0], cellFrom[1]).push(cellTo);
+      this.getCellFromMaze(cellFrom[0], cellFrom[1]).children.push(cellTo);
+      this.getCellFromMaze(cellTo[0], cellTo[1]).parent = cellFrom;
     },
 
     generate: function() {
@@ -147,16 +162,15 @@ var MazeGenerator = (function() {
         var chosenCellFromFrontier = frontier[frontierIndex];
         this.removeFromFrontier(frontierIndex);
         
-        // Get adjacent cells of new cell picked from frontier and join it to a previous cell from maze
+        // Get adjacent cells of new cell picked from frontier and select a previous cell from maze
         adjacentCells = this.getAdjacentCells(chosenCellFromFrontier[0], chosenCellFromFrontier[1]);
         var adjacentCellsInMaze = this.removeCellsNotInMaze(adjacentCells);
         var cellFromMaze = adjacentCellsInMaze[this.pickRandomCell(adjacentCellsInMaze)];
-        this.joinTwoCellsFromMaze(cellFromMaze, chosenCellFromFrontier);
 
-        // Add the cell from frontier to the maze and add new cells to frontier
+        // Add the cell from frontier to the maze, join it to the previous selected cell from maze and add new cells to frontier
         this.addCellToMaze(chosenCellFromFrontier[0], chosenCellFromFrontier[1]);
+        this.joinTwoCellsFromMaze(cellFromMaze, chosenCellFromFrontier);
         this.addAdjacentCellsToFrontier(adjacentCells);
-
 
         if (adjacentCellsInMaze.length > 1) {
           adjacentCellsInMaze.splice(adjacentCellsInMaze.indexOf(cellFromMaze), 1);
@@ -170,6 +184,36 @@ var MazeGenerator = (function() {
 
     getMaze: function() {
       return maze;
+    },
+
+    selectEntry: function() {
+      // TODO: Choose an entry randomly
+      this.entry = [0, 0];
+    },
+
+    selectExit: function() {
+      // TODO: Choose an exit randomly
+      this.exit = [this.rows - 1, this.columns - 1];
+    },
+
+    solve: function() {
+      var pathFromEntry = this.reachFirstCell(this.entry[0], this.entry[1]);
+      var pathFromExit = this.reachFirstCell(this.exit[0], this.exit[1]);
+
+      this.solution = pathFromEntry.concat(pathFromExit.reverse());
+    },
+
+    reachFirstCell: function(i, j) {
+      var path = [];
+      var nextCell = [i, j];
+
+      do {
+        path.push(nextCell);
+        nextCell = this.getCellFromMaze(nextCell[0], nextCell[1]).parent;
+      }
+      while(nextCell);
+
+      return path;
     }
 
   };
