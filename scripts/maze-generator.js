@@ -18,6 +18,9 @@ var MazeGenerator = (function() {
       this.columns = width / this.cellSize;
       this.rows = height / this.cellSize; 
 
+      this.entry = [];
+      this.exit = [];
+
       this.exposedForPainting = [];
 
       maze = {};
@@ -165,7 +168,6 @@ var MazeGenerator = (function() {
         this.joinTwoCellsFromMaze(cellFromMaze, chosenCellFromFrontier);
         this.addAdjacentCellsToFrontier(adjacentCells);
 
-
         if (adjacentCellsInMaze.length > 1) {
           adjacentCellsInMaze.splice(adjacentCellsInMaze.indexOf(cellFromMaze), 1);
           this.exposedForPainting.push({cellSize: this.cellSize, cellToPaint: chosenCellFromFrontier, frontier: frontier, walls: adjacentCellsInMaze});
@@ -178,6 +180,16 @@ var MazeGenerator = (function() {
 
     getMaze: function() {
       return maze;
+    },
+
+    selectEntry: function() {
+      // TODO: Choose an entry randomly
+      this.entry = [0, 0];
+    },
+
+    selectExit: function() {
+      // TODO: Choose an exit randomly
+      this.exit = [this.rows - 1, this.columns - 1];
     }
 
   };
