@@ -13,6 +13,8 @@ var MazeGenerator = (function() {
 
     exposedForPainting: [],
 
+    solution: [],
+
     init: function(width, height, cellSize) {
       this.cellSize = cellSize;
       this.columns = width / this.cellSize;
@@ -20,6 +22,8 @@ var MazeGenerator = (function() {
 
       this.entry = [];
       this.exit = [];
+
+      this.solution = [];
 
       this.exposedForPainting = [];
 
@@ -190,6 +194,26 @@ var MazeGenerator = (function() {
     selectExit: function() {
       // TODO: Choose an exit randomly
       this.exit = [this.rows - 1, this.columns - 1];
+    },
+
+    solve: function() {
+      var pathFromEntry = this.reachFirstCell(this.entry[0], this.entry[1]);
+      var pathFromExit = this.reachFirstCell(this.exit[0], this.exit[1]);
+
+      this.solution = pathFromEntry.concat(pathFromExit.reverse());
+    },
+
+    reachFirstCell: function(i, j) {
+      var path = [];
+      var nextCell = [i, j];
+
+      do {
+        path.push(nextCell);
+        nextCell = this.getCellFromMaze(nextCell[0], nextCell[1]).parent;
+      }
+      while(nextCell);
+
+      return path;
     }
 
   };
