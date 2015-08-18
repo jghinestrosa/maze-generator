@@ -1,9 +1,13 @@
-'use strict';
+',use strict';
 
 module.exports = function(grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
+    clean: {
+      dist: ['dist']
+    },
 
     copy: {
       dist: {
@@ -12,6 +16,7 @@ module.exports = function(grunt) {
         ]
       }
     },
+
     'gh-pages': {
       options: {
         base: 'dist'
@@ -20,9 +25,11 @@ module.exports = function(grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-gh-pages');
 
-  grunt.registerTask('build', ['copy:dist', 'gh-pages']);
+  grunt.registerTask('build', ['clean:dist', 'copy:dist']);
+  grunt.registerTask('deploy', ['gh-pages']);
 
 };
