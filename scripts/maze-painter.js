@@ -30,6 +30,7 @@ var MazePainter = (function(window, MazeGenerator) {
         var exposed = MazeGenerator.exposedForPainting.shift();
         this.paint(exposed.cellSize, exposed.cellToPaint, exposed.frontier, exposed.walls);
       }
+
       window.requestAnimationFrame(this.startPainting.bind(this));
     },
 

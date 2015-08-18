@@ -11,6 +11,8 @@ var MazeGenerator = (function() {
 
   var mazeGenerator = {
 
+    exposedForPainting: [],
+
     init: function(width, height, cellSize) {
       this.cellSize = cellSize;
       this.columns = width / this.cellSize;
