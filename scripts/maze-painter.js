@@ -7,13 +7,16 @@ var MazePainter = (function(window, MazeGenerator) {
 
   var mazePainter = {
     
-    init: function(canvas, cellColor, frontierColor, wallColor) {
+    init: function(canvas, cellColor, frontierColor, wallColor, enterColor, exitColor) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
       this.cellColor = cellColor;
       this.frontierColor = frontierColor;
       this.wallColor = wallColor;
+
+      this.enterColor = enterColor;
+      this.exitColor = exitColor;
 
       this.clear(0, 0, canvas.width, canvas.height);
     },
