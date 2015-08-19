@@ -106,7 +106,7 @@ var MazePainter = (function(window, MazeGenerator) {
         var cell = MazeGenerator.solution.shift();
         
         this.ctx.fillStyle = this.solutionColor;
-        this.ctx.fillRect(cell[0] * this.cellSize, cell[1] * this.cellSize, this.cellSize, this.cellSize);
+        this.ctx.fillRect(cell[1] * this.cellSize, cell[0] * this.cellSize, this.cellSize, this.cellSize);
       }
     },
 
