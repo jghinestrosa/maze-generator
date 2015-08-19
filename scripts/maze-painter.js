@@ -104,15 +104,15 @@ var MazePainter = (function(window, MazeGenerator) {
 
     paintEntryExit: function() {
       if (MazeGenerator.entry && MazeGenerator.exit) {
-        this.drawCell(MazeGenerator.entry[0] * this.cellSize, MazeGenerator.entry[1] * this.cellSize, this.cellSize, this.cellSize, this.entryColor);
-        this.drawCell(MazeGenerator.exit[0] * this.cellSize, MazeGenerator.exit[1] * this.cellSize, this.cellSize, this.cellSize, this.entryColor);
+        this.drawCell(this.getX(MazeGenerator.entry[1]), this.getY(MazeGenerator.entry[0]), this.cellSize, this.cellSize, this.entryColor);
+        this.drawCell(this.getX(MazeGenerator.exit[1]), this.getY(MazeGenerator.exit[0]), this.cellSize, this.cellSize, this.entryColor);
       }
     },
 
     paintSolution: function() {
       if (MazeGenerator.solution.length > 0) {
         var cell = MazeGenerator.solution.shift();
-        this.drawCell(cell[1] * this.cellSize, cell[0] * this.cellSize, this.cellSize, this.cellSize, this.solutionColor);
+        this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, this.solutionColor);
       }
     },
 
