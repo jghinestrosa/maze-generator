@@ -19,7 +19,7 @@
     MazeGenerator.selectExit();
 
     MazeInteraction.init(canvas, 20, MazeGenerator.getMaze());
-    MazeInteraction.listenClickEvents();
+    MazeInteraction.startListeningUserEvents();
   });
 
   bSolve.addEventListener('click', function() {
