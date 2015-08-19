@@ -4,6 +4,9 @@ var MazePainter = (function(window, MazeGenerator) {
   var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
   window.requestAnimationFrame = requestAnimationFrame;
 
+  var paintingMaze = false;
+  var mazePainted = false;
+
   var mazePainter = {
     
     init: function(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor) {
@@ -21,7 +24,14 @@ var MazePainter = (function(window, MazeGenerator) {
 
       this.solutionColor = solutionColor;
 
+      paintingMaze = false;
+      mazePainted = false;
+
       this.clear(0, 0, canvas.width, canvas.height);
+    },
+
+    isMazePainted: function() {
+      return mazePainted;
     },
 
     drawLine: function(xFrom, yFrom, xTo, yTo, color) {
@@ -48,12 +58,18 @@ var MazePainter = (function(window, MazeGenerator) {
     paintMazeGeneration: function() {
 
       if (MazeGenerator.exposedForPainting.length > 0) {
+        paintingMaze = true;
 
         // Paint 4 cells each animation frame iteration to
         // increase the speed of generation
         for (var i = 0; i < 4; i++) {
           var exposed = MazeGenerator.exposedForPainting.shift();
           this.paintGeneratedCell(exposed);
+        }
+      }
+      else {
+        if (paintingMaze) {
+          mazePainted = true;
         }
       }
     },

@@ -20,9 +20,9 @@
   });
 
   bSolve.addEventListener('click', function() {
-    
-    MazeGenerator.solve();
-  
+    if (MazePainter.isMazePainted()) {
+      MazeGenerator.solve();
+    }
   });
 
 
