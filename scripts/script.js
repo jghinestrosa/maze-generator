@@ -1,4 +1,4 @@
-(function(document, MazeGenerator, MazePainter) {
+(function(document, MazeGenerator, MazePainter, MazeInteraction) {
   'use strict';
 
   // DOM Elements
@@ -17,6 +17,9 @@
     MazeGenerator.generate();
     MazeGenerator.selectEntry();
     MazeGenerator.selectExit();
+
+    MazeInteraction.init(canvas, 20, MazeGenerator.getMaze());
+    MazeInteraction.listenClickEvents();
   });
 
   bSolve.addEventListener('click', function() {
@@ -25,6 +28,4 @@
     }
   });
 
-
-
-}(document, MazeGenerator, MazePainter));
+}(document, MazeGenerator, MazePainter, MazeInteraction));
