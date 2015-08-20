@@ -1,13 +1,16 @@
 var MazeInteraction = (function(MazeGenerator, MazePainter) {
   'user strict';
 
-  var mouseDown = false;
-
   var handlerMouseMove;
+
+  var path = [];
+  var joinedCells = [];
+
+  var currentCell = null;
 
   var mazeInteraction = {
 
-    exposedForPainting: [],
+    solution: [],
 
     init: function(canvas, cellSize, maze) {
       this.canvas = canvas;
@@ -39,7 +42,13 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
     handleMouseMoveEvents: function(e) {
       var x = e.clientX - this.canvas.getBoundingClientRect().left;
       var y = e.clientY - this.canvas.getBoundingClientRect().top;
-      this.calculateCell(x, y);
+      var cell = this.calculateCell(x, y);
+
+      if (currentCell === null || !(currentCell[0] === cell[0] && currentCell[1] === cell[1]) && MazeGenerator.areCellsJoined(currentCell, cell)) {
+        console.log('a');
+        currentCell = cell;
+        this.solution.push(cell);
+      }
     },
 
     listenMouseUpEvents: function() {
@@ -51,7 +60,7 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
     calculateCell: function(x, y) {
       var j = Math.floor(x / this.cellSize);
       var i = Math.floor(y / this.cellSize);
-      this.exposedForPainting.push([i, j]);
+      return [i, j];
     }
   
   };

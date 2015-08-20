@@ -50,7 +50,8 @@ var MazePainter = (function(window, MazeGenerator) {
     startPainting: function() {
       this.paintMazeGeneration();
       this.paintEntryExit();
-      this.paintSolution();
+      this.paintSolution(MazeGenerator.solution);
+      this.paintSolution(MazeInteraction.solution);
 
       window.requestAnimationFrame(this.startPainting.bind(this));
     },
@@ -125,9 +126,11 @@ var MazePainter = (function(window, MazeGenerator) {
       }
     },
 
-    paintSolution: function() {
-      if (MazeGenerator.solution.length > 0) {
-        var cell = MazeGenerator.solution.shift();
+    paintSolution: function(solution) {
+      if (solution.length > 0) {
+        console.log(solution);
+        var cell = solution.shift();
+        console.log(cell);
         this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, this.solutionColor);
       }
     },

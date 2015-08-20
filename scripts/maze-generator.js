@@ -138,9 +138,28 @@ var MazeGenerator = (function() {
     },
 
     joinTwoCellsFromMaze: function(cellFrom, cellTo) {
-      //this.getCellFromMaze(cellFrom[0], cellFrom[1]).push(cellTo);
       this.getCellFromMaze(cellFrom[0], cellFrom[1]).children.push(cellTo);
       this.getCellFromMaze(cellTo[0], cellTo[1]).parent = cellFrom;
+    },
+
+    areCellsJoined: function(cellFrom, cellTo) {
+      var joined = false;
+      this.getCellFromMaze(cellFrom[0], cellFrom[1]).children.forEach(function(cell) {
+        if (cell[0] === cellTo[0] && cell[1] === cellTo[1]) {
+          joined = true;
+        } 
+      });
+
+      if (!joined) {
+        this.getCellFromMaze(cellTo[0], cellTo[1]).children.forEach(function(cell) {
+          if (cell[0] === cellFrom[0] && cell[1] === cellFrom[1]) {
+            joined = true;
+          } 
+        });
+      }
+
+
+      return joined;
     },
 
     generate: function() {
