@@ -9,7 +9,7 @@ var MazePainter = (function(window, MazeGenerator) {
 
   var mazePainter = {
     
-    init: function(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor) {
+    init: function(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
 
@@ -23,6 +23,7 @@ var MazePainter = (function(window, MazeGenerator) {
       this.exitColor = exitColor;
 
       this.solutionColor = solutionColor;
+      this.userSolutionColor = userSolutionColor;
 
       paintingMaze = false;
       mazePainted = false;
@@ -50,8 +51,8 @@ var MazePainter = (function(window, MazeGenerator) {
     startPainting: function() {
       this.paintMazeGeneration();
       this.paintEntryExit();
-      this.paintSolution(MazeGenerator.solution);
-      this.paintSolution(MazeInteraction.solution);
+      this.paintSolution(MazeGenerator.solution, this.solutionColor);
+      this.paintSolution(MazeInteraction.solution, this.userSolutionColor);
 
       window.requestAnimationFrame(this.startPainting.bind(this));
     },
@@ -126,12 +127,12 @@ var MazePainter = (function(window, MazeGenerator) {
       }
     },
 
-    paintSolution: function(solution) {
+    paintSolution: function(solution, color) {
       if (solution.length > 0) {
         console.log(solution);
         var cell = solution.shift();
         console.log(cell);
-        this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, this.solutionColor);
+        this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, color);
       }
     },
 

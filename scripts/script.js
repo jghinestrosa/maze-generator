@@ -13,7 +13,7 @@
 
     // Initialize modules
     MazeGenerator.init(canvas.width, canvas.height, 20);
-    MazePainter.init(canvas, 20, '#fff', '#f00', '#000', '#0f0', '#0f0', '#00f');
+    MazePainter.init(canvas, 20, '#fff', '#f00', '#000', '#0f0', '#0f0', '#0f0', '#00f');
     MazeGenerator.generate();
     MazeGenerator.selectEntry();
     MazeGenerator.selectExit();
