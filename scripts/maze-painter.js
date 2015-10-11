@@ -52,7 +52,8 @@ var MazePainter = (function(window, MazeGenerator) {
       this.paintMazeGeneration();
       this.paintEntryExit();
       this.paintSolution(MazeGenerator.solution, this.solutionColor);
-      this.paintSolution(MazeInteraction.solution, this.userSolutionColor);
+      //this.paintSolution(MazeInteraction.solution, this.userSolutionColor);
+      this.paintUserSolution(MazeInteraction.solution, this.userSolutionColor);
 
       window.requestAnimationFrame(this.startPainting.bind(this));
     },
@@ -129,15 +130,28 @@ var MazePainter = (function(window, MazeGenerator) {
 
     paintSolution: function(solution, color) {
       if (solution.length > 0) {
-        console.log(solution);
+        //console.log(solution);
         var cell = solution.shift();
-        console.log(cell);
+        //console.log(cell);
         this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, color);
       }
     },
 
-    clear: function() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    paintUserSolution: function(solution, color) {
+      if (solution.length > 0) {
+        var cellInfo = solution.shift();
+        var cell = cellInfo.cell;
+
+        if (cellInfo.clear) {
+          color = this.cellColor;
+        }
+
+        this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, color);
+      }
+    },
+
+    clear: function(x, y, width, height) {
+      this.ctx.clearRect(x, y, width, height);
     },
 
     getX: function(j) {

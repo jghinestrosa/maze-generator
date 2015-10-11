@@ -44,10 +44,27 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
       var y = e.clientY - this.canvas.getBoundingClientRect().top;
       var cell = this.calculateCell(x, y);
 
-      if (currentCell === null || !(currentCell[0] === cell[0] && currentCell[1] === cell[1]) && MazeGenerator.areCellsJoined(currentCell, cell)) {
-        console.log('a');
+      if (currentCell === null) {
         currentCell = cell;
-        this.solution.push(cell);
+        path.push(cell);
+        this.solution.push({cell: cell, clear: false});
+        return;
+      }
+
+      if (!MazeGenerator.areTheSameCell(currentCell, cell)) {
+       if (path.length > 1 && MazeGenerator.areTheSameCell(cell, path[path.length - 2])) {
+         this.solution.push({cell: currentCell, clear: true});
+         currentCell = cell;
+         path.pop();
+         return;
+       }
+      
+       if (MazeGenerator.areCellsJoined(currentCell, cell)) {
+         currentCell = cell;
+         path.push(cell);
+         this.solution.push({cell: cell, clear: false});
+       }
+
       }
     },
 
