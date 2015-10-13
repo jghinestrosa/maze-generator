@@ -25,8 +25,14 @@
     MazeGenerator.init(canvas.width, canvas.height, cellSize);
     MazeGenerator.generate();
 
+    MazeGenerator.onSolved(function() {
+      MazeInteraction.stopListeningUserEvents();
+    });
+
     MazeInteraction.init(canvas, cellSize, MazeGenerator.getMaze());
     MazeInteraction.onSolved(function() {
+
+      MazeInteraction.stopListeningUserEvents();
 
       // TODO: Temporary callback
       alert('Solved!');

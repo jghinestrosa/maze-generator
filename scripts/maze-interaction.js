@@ -1,7 +1,10 @@
 var MazeInteraction = (function(MazeGenerator, MazePainter) {
   'user strict';
 
+  var handlerMouseDown;
   var handlerMouseMove;
+  var handlerMouseUp;
+  var handlerMouseLeave;
 
   var path = [];
   var joinedCells = [];
@@ -39,8 +42,16 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
       this.listenMouseLeaveEvents();
     },
 
+    stopListeningUserEvents: function() {
+      this.canvas.removeEventListener('mousedown', handlerMouseDown);
+      this.canvas.removeEventListener('mousemove', handlerMouseMove);
+      this.canvas.removeEventListener('mouseup', handlerMouseUp);
+      this.canvas.removeEventListener('mouseleave', handlerMouseLeave);
+    },
+
     listenMouseDownEvents: function() {
-      this.canvas.addEventListener('mousedown', this.handleMouseDownEvents.bind(this));
+      handlerMouseDown = this.handleMouseDownEvents.bind(this);
+      this.canvas.addEventListener('mousedown', handlerMouseDown);
     },
 
     handleMouseDownEvents: function(e) {
@@ -93,7 +104,8 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
     },
 
     listenMouseUpEvents: function() {
-      this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
+      handlerMouseUp = this.handleMouseUp.bind(this);
+      this.canvas.addEventListener('mouseup', handlerMouseUp);
     },
 
     handleMouseUp: function() {
@@ -102,7 +114,8 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
     },
 
     listenMouseLeaveEvents: function() {
-      this.canvas.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
+      handlerMouseLeave = this.handleMouseLeave.bind(this);
+      this.canvas.addEventListener('mouseleave', handlerMouseLeave);
     },
 
     handleMouseLeave: function() {

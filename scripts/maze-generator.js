@@ -9,6 +9,14 @@ var MazeGenerator = (function() {
   // TODO: Maybe find a better alternative
   var frontierList = [];
 
+  var solutionCallbacks = [];
+
+  function callSolutionCallbacks() {
+    solutionCallbacks.forEach(function(callback) {
+      callback();
+    });
+  }
+
   var mazeGenerator = {
 
     exposedForPainting: [],
@@ -220,6 +228,9 @@ var MazeGenerator = (function() {
       var pathFromExit = this.reachFirstCell(this.exit[0], this.exit[1]);
 
       this.solution = pathFromEntry.concat(pathFromExit.reverse());
+
+      callSolutionCallbacks();
+
     },
 
     reachFirstCell: function(i, j) {
@@ -237,6 +248,10 @@ var MazeGenerator = (function() {
 
     areTheSameCell: function(cell1, cell2) {
       return cell1[0] === cell2[0] && cell1[1] === cell2[1];
+    },
+
+    onSolved: function(callback) {
+      solutionCallbacks.push(callback);
     }
 
   };
