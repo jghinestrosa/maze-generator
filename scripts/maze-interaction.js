@@ -45,9 +45,12 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
       var cell = this.calculateCell(x, y);
 
       if (currentCell === null) {
-        currentCell = cell;
-        path.push(cell);
-        this.solution.push({cell: cell, clear: false});
+        if (MazeGenerator.areTheSameCell(cell, MazeGenerator.entry)) {
+          currentCell = cell;
+          path.push(cell);
+          this.solution.push({cell: cell, clear: false});
+        }
+
         return;
       }
 
