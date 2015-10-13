@@ -25,6 +25,10 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
       this.canvas = canvas;
       this.cellSize = cellSize;
       this.maze = maze;
+      this.solution = [];
+      currentCell = null;
+      path = [];
+      solutionCallbacks = [];
     },
 
     startListeningUserEvents: function() {
@@ -78,8 +82,7 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
        }
        
        if (MazeGenerator.areTheSameCell(currentCell, MazeGenerator.exit)) {
-         this.handleMouseUp();
-         callSolutionCallbacks();
+         this.solve();
        }
 
       }
@@ -101,6 +104,11 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
 
     onSolved: function(callback) {
       solutionCallbacks.push(callback);
+    },
+
+    solve: function() {
+      this.handleMouseUp();
+      callSolutionCallbacks();
     }
   
   };
