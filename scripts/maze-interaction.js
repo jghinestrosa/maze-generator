@@ -78,16 +78,19 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
        }
        
        if (MazeGenerator.areTheSameCell(currentCell, MazeGenerator.exit)) {
-        callSolutionCallbacks();
+         this.handleMouseUp();
+         callSolutionCallbacks();
        }
 
       }
     },
 
     listenMouseUpEvents: function() {
-      this.canvas.addEventListener('mouseup', function() {
-        this.canvas.removeEventListener('mousemove', handlerMouseMove);
-      }.bind(this));
+      this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
+    },
+
+    handleMouseUp: function() {
+      this.canvas.removeEventListener('mousemove', handlerMouseMove);
     },
 
     calculateCell: function(x, y) {
