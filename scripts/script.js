@@ -2,7 +2,8 @@
   'use strict';
 
   // DOM Elements
-  var canvas = document.getElementById('maze');
+  var canvasMaze = document.getElementById('maze');
+  var canvasSolution = document.getElementById('mouse-handler');
   var bGenerate = document.getElementById('bGenerate');
   var bSolve = document.getElementById('bSolve');
 
@@ -22,14 +23,14 @@
   bGenerate.addEventListener('click', function() {
 
     // Initialize modules
-    MazeGenerator.init(canvas.width, canvas.height, cellSize);
+    MazeGenerator.init(canvasMaze.width, canvasMaze.height, cellSize);
     MazeGenerator.generate();
 
     MazeGenerator.onSolved(function() {
       MazeInteraction.stopListeningUserEvents();
     });
 
-    MazeInteraction.init(canvas, cellSize, MazeGenerator.getMaze());
+    MazeInteraction.init(canvasSolution, cellSize, MazeGenerator.getMaze());
     MazeInteraction.onSolved(function() {
 
       MazeInteraction.stopListeningUserEvents();
@@ -38,7 +39,7 @@
       alert('Solved!');
     });
 
-    MazePainter.init(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor);
+    MazePainter.init(canvasMaze, canvasSolution, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor);
 
     MazePainter.onMazePainted(function() {
       MazeGenerator.selectEntry();

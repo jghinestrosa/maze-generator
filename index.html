@@ -8,9 +8,10 @@
   </head>
   <body>
     <!--<canvas id="maze" width="180" height="180">-->
-    <canvas id="maze" width="800" height="800">
-      
-    </canvas>
+    <div id="canvas-wrapper">
+      <canvas id="maze" width="800" height="800"></canvas>
+      <canvas id="mouse-handler" width="800" height="800"></canvas>
+    </div>
     <button id="bGenerate">Generate</button>
     <button id="bSolve">Solve</button>
     <script type="text/javascript" charset="utf-8" src="scripts/maze-generator.js"></script>
