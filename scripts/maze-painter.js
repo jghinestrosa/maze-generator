@@ -70,6 +70,10 @@ var MazePainter = (function(window, MazeGenerator) {
 
     paintMazeGeneration: function() {
 
+      if (mazePainted) {
+        return;
+      }
+
       if (MazeGenerator.exposedForPainting.length > 0) {
         paintingMaze = true;
 
