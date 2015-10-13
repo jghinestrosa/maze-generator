@@ -7,6 +7,14 @@ var MazePainter = (function(window, MazeGenerator) {
   var paintingMaze = false;
   var mazePainted = false;
 
+  var mazePaintedCallbacks = [];
+
+  function callMazePaintedCallbacks() {
+    mazePaintedCallbacks.forEach(function(callback) {
+      callback();
+    });
+  }
+
   var mazePainter = {
     
     init: function(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor) {
@@ -27,6 +35,8 @@ var MazePainter = (function(window, MazeGenerator) {
 
       paintingMaze = false;
       mazePainted = false;
+
+      mazePaintedCallbacks = [];
 
       this.clear(0, 0, canvas.width, canvas.height);
     },
@@ -73,6 +83,7 @@ var MazePainter = (function(window, MazeGenerator) {
       else {
         if (paintingMaze) {
           mazePainted = true;
+          callMazePaintedCallbacks();
         }
       }
     },
@@ -160,6 +171,10 @@ var MazePainter = (function(window, MazeGenerator) {
 
     getY: function(i) {
       return i * this.cellSize;
+    },
+
+    onMazePainted: function(callback) {
+      mazePaintedCallbacks.push(callback);
     }
   };
 

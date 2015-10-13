@@ -23,18 +23,22 @@
 
     // Initialize modules
     MazeGenerator.init(canvas.width, canvas.height, cellSize);
-    MazePainter.init(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor);
     MazeGenerator.generate();
     MazeGenerator.selectEntry();
     MazeGenerator.selectExit();
 
     MazeInteraction.init(canvas, cellSize, MazeGenerator.getMaze());
-    MazeInteraction.startListeningUserEvents();
 
     MazeInteraction.onSolved(function() {
 
       // TODO: Temporary callback
       alert('Solved!');
+    });
+
+    MazePainter.init(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor);
+
+    MazePainter.onMazePainted(function() {
+      MazeInteraction.startListeningUserEvents();
     });
 
   });
