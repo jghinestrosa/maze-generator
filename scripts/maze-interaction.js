@@ -8,6 +8,15 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
 
   var currentCell = null;
 
+  // List of callbacks to call when the maze is solved
+  var solutionCallbacks = [];
+
+  function callSolutionCallbacks() {
+    solutionCallbacks.forEach(function(callback) {
+      callback();
+    });
+  }
+
   var mazeInteraction = {
 
     solution: [],
@@ -67,6 +76,10 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
          path.push(cell);
          this.solution.push({cell: cell, clear: false});
        }
+       
+       if (MazeGenerator.areTheSameCell(currentCell, MazeGenerator.exit)) {
+        callSolutionCallbacks();
+       }
 
       }
     },
@@ -81,6 +94,10 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
       var j = Math.floor(x / this.cellSize);
       var i = Math.floor(y / this.cellSize);
       return [i, j];
+    },
+
+    onSolved: function(callback) {
+      solutionCallbacks.push(callback);
     }
   
   };

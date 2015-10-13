@@ -30,6 +30,13 @@
 
     MazeInteraction.init(canvas, cellSize, MazeGenerator.getMaze());
     MazeInteraction.startListeningUserEvents();
+
+    MazeInteraction.onSolved(function() {
+
+      // TODO: Temporary callback
+      alert('Solved!');
+    });
+
   });
 
   bSolve.addEventListener('click', function() {
