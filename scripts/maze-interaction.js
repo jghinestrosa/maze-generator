@@ -8,6 +8,8 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
 
   var currentCell = null;
 
+  var isMouseDown = false;
+
   // List of callbacks to call when the maze is solved
   var solutionCallbacks = [];
 
@@ -34,6 +36,7 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
     startListeningUserEvents: function() {
       this.listenMouseDownEvents();
       this.listenMouseUpEvents();
+      this.listenMouseLeaveEvents();
     },
 
     listenMouseDownEvents: function() {
@@ -41,6 +44,7 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
     },
 
     handleMouseDownEvents: function(e) {
+      isMouseDown = true;
       var x = e.clientX - this.canvas.getBoundingClientRect().left;
       var y = e.clientY - this.canvas.getBoundingClientRect().top;
       this.calculateCell(x, y);
@@ -94,6 +98,18 @@ var MazeInteraction = (function(MazeGenerator, MazePainter) {
 
     handleMouseUp: function() {
       this.canvas.removeEventListener('mousemove', handlerMouseMove);
+      isMouseDown = false;
+    },
+
+    listenMouseLeaveEvents: function() {
+      this.canvas.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
+    },
+
+    handleMouseLeave: function() {
+      if (isMouseDown) {
+        this.canvas.removeEventListener('mousemove', handlerMouseMove);
+        isMouseDown = false;
+      }
     },
 
     calculateCell: function(x, y) {
