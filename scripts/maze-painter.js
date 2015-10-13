@@ -145,9 +145,7 @@ var MazePainter = (function(window, MazeGenerator) {
 
     paintSolution: function(solution, color) {
       if (solution.length > 0) {
-        //console.log(solution);
         var cell = solution.shift();
-        //console.log(cell);
         this.drawCell(this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, color);
       }
     },
