@@ -214,13 +214,11 @@ var MazeGenerator = (function() {
     },
 
     selectEntry: function() {
-      // TODO: Choose an entry randomly
-      this.entry = [0, 0];
+      this.entry = [Math.floor(Math.random() * this.rows), 0];
     },
 
     selectExit: function() {
-      // TODO: Choose an exit randomly
-      this.exit = [this.rows - 1, this.columns - 1];
+      this.exit = [Math.floor(Math.random() * this.rows), this.columns - 1];
     },
 
     solve: function() {
