@@ -4,16 +4,20 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="styles/style.css" />
     <title>Maze Generator</title>
-    
   </head>
   <body>
-    <!--<canvas id="maze" width="180" height="180">-->
+    <h1 class="centered-text">Maze Generator</h1>
     <div id="canvas-wrapper">
       <canvas id="maze" width="300" height="300"></canvas>
       <canvas id="mouse-handler" width="300" height="300"></canvas>
     </div>
-    <button id="bGenerate">Generate</button>
-    <button id="bSolve">Solve</button>
+    <div id="buttons" class="centered-text">
+      <button id="bGenerate">Generate</button>
+      <button id="bSolve">Solve</button>
+    </div>
+    <div id="github" class="centered-text">
+      <a href="https://github.com/jghinestrosa/maze-generator">GitHub</a>
+    </div>
     <script type="text/javascript" charset="utf-8" src="scripts/maze-generator.js"></script>
     <script type="text/javascript" charset="utf-8" src="scripts/maze-painter.js"></script>
     <script type="text/javascript" charset="utf-8" src="scripts/maze-interaction.js"></script>
