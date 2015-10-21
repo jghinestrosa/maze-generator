@@ -4,11 +4,25 @@ var MazePainter = (function(window, MazeGenerator) {
   var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
   window.requestAnimationFrame = requestAnimationFrame;
 
+  var paintingMaze = false;
+  var mazePainted = false;
+
+  var mazePaintedCallbacks = [];
+
+  function callMazePaintedCallbacks() {
+    mazePaintedCallbacks.forEach(function(callback) {
+      callback();
+    });
+  }
+
   var mazePainter = {
     
-    init: function(canvas, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor) {
+    init: function(canvas, canvasSolution, cellSize, cellColor, frontierColor, wallColor, entryColor, exitColor, solutionColor, userSolutionColor) {
       this.canvas = canvas;
       this.ctx = canvas.getContext('2d');
+
+      this.canvasSolution = canvasSolution;
+      this.ctxSolution = canvasSolution.getContext('2d');
 
       this.cellSize = cellSize;
 
@@ -20,40 +34,64 @@ var MazePainter = (function(window, MazeGenerator) {
       this.exitColor = exitColor;
 
       this.solutionColor = solutionColor;
+      this.userSolutionColor = userSolutionColor;
 
-      this.clear(0, 0, canvas.width, canvas.height);
+      paintingMaze = false;
+      mazePainted = false;
+
+      mazePaintedCallbacks = [];
+
+      this.clear(this.ctx, 0, 0, canvas.width, canvas.height);
+      this.clear(this.ctxSolution, 0, 0, canvasSolution.width, canvasSolution.height);
     },
 
-    drawLine: function(xFrom, yFrom, xTo, yTo, color) {
-      this.ctx.strokeStyle = color;
-      this.ctx.beginPath();
-      this.ctx.moveTo(xFrom, yFrom);
-      this.ctx.lineTo(xTo, yTo);
-      this.ctx.stroke();
+    isMazePainted: function() {
+      return mazePainted;
     },
 
-    drawCell: function(x, y, width, height, color) {
-      this.ctx.fillStyle = color;
-      this.ctx.fillRect(x, y, width, height);
+    drawLine: function(ctx, xFrom, yFrom, xTo, yTo, color) {
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(xFrom, yFrom);
+      ctx.lineTo(xTo, yTo);
+      ctx.stroke();
+    },
+
+    drawCell: function(ctx, x, y, width, height, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, width, height);
     },
 
     startPainting: function() {
       this.paintMazeGeneration();
       this.paintEntryExit();
-      this.paintSolution();
+      this.paintSolution(MazeGenerator.solution, this.solutionColor);
+      //this.paintSolution(MazeInteraction.solution, this.userSolutionColor);
+      this.paintUserSolution(MazeInteraction.solution, this.userSolutionColor);
 
       window.requestAnimationFrame(this.startPainting.bind(this));
     },
 
     paintMazeGeneration: function() {
 
+      if (mazePainted) {
+        return;
+      }
+
       if (MazeGenerator.exposedForPainting.length > 0) {
+        paintingMaze = true;
 
         // Paint 4 cells each animation frame iteration to
         // increase the speed of generation
         for (var i = 0; i < 4; i++) {
           var exposed = MazeGenerator.exposedForPainting.shift();
           this.paintGeneratedCell(exposed);
+        }
+      }
+      else {
+        if (paintingMaze) {
+          mazePainted = true;
+          callMazePaintedCallbacks();
         }
       }
     },
@@ -66,7 +104,7 @@ var MazePainter = (function(window, MazeGenerator) {
         var yCellToPaint = this.getY(cellInfo.cellToPaint[0]);
 
         // Paint a cell from the maze
-        this.drawCell(xCellToPaint, yCellToPaint, this.cellSize, this.cellSize, this.cellColor);
+        this.drawCell(this.ctx, xCellToPaint, yCellToPaint, this.cellSize, this.cellSize, this.cellColor);
 
         // Paint walls surrounding this cell
         if (cellInfo.walls) {
@@ -80,22 +118,22 @@ var MazePainter = (function(window, MazeGenerator) {
 
         // Up
         if (cell[0] < i) {
-          this.drawLine(x, y, x + this.cellSize, y, this.wallColor);
+          this.drawLine(this.ctx, x, y, x + this.cellSize, y, this.wallColor);
         }
 
         // Down
         if (cell[0] > i) {
-          this.drawLine(x, y + this.cellSize, x + this.cellSize, y + this.cellSize, this.wallColor);
+          this.drawLine(this.ctx, x, y + this.cellSize, x + this.cellSize, y + this.cellSize, this.wallColor);
         }
 
         // Left
         if (cell[1] < j) {
-          this.drawLine(x, y, x, y + this.cellSize, this.wallColor);
+          this.drawLine(this.ctx, x, y, x, y + this.cellSize, this.wallColor);
         }
 
         // Right
         if (cell[1] > j) {
-          this.drawLine(x + this.cellSize, y, x + this.cellSize, y + this.cellSize, this.wallColor);
+          this.drawLine(this.ctx, x + this.cellSize, y, x + this.cellSize, y + this.cellSize, this.wallColor);
         }
 
       }.bind(this));
@@ -104,20 +142,35 @@ var MazePainter = (function(window, MazeGenerator) {
 
     paintEntryExit: function() {
       if (MazeGenerator.entry && MazeGenerator.exit) {
-        this.drawCell(MazeGenerator.entry[0] * this.cellSize, MazeGenerator.entry[1] * this.cellSize, this.cellSize, this.cellSize, this.entryColor);
-        this.drawCell(MazeGenerator.exit[0] * this.cellSize, MazeGenerator.exit[1] * this.cellSize, this.cellSize, this.cellSize, this.entryColor);
+        this.drawCell(this.ctx, this.getX(MazeGenerator.entry[1]), this.getY(MazeGenerator.entry[0]), this.cellSize, this.cellSize, this.entryColor);
+        this.drawCell(this.ctx, this.getX(MazeGenerator.exit[1]), this.getY(MazeGenerator.exit[0]), this.cellSize, this.cellSize, this.entryColor);
       }
     },
 
-    paintSolution: function() {
-      if (MazeGenerator.solution.length > 0) {
-        var cell = MazeGenerator.solution.shift();
-        this.drawCell(cell[1] * this.cellSize, cell[0] * this.cellSize, this.cellSize, this.cellSize, this.solutionColor);
+    paintSolution: function(solution, color) {
+      if (solution.length > 0) {
+        var cell = solution.shift();
+        this.drawCell(this.ctxSolution, this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, color);
       }
     },
 
-    clear: function() {
-      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    paintUserSolution: function(solution, color) {
+      if (solution.length > 0) {
+        var cellInfo = solution.shift();
+        var cell = cellInfo.cell;
+
+        if (cellInfo.clear) {
+          this.clear(this.ctxSolution, this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize);
+        }
+        else {
+          this.drawCell(this.ctxSolution, this.getX(cell[1]), this.getY(cell[0]), this.cellSize, this.cellSize, color);
+        }
+
+      }
+    },
+
+    clear: function(ctx, x, y, width, height) {
+      ctx.clearRect(x, y, width, height);
     },
 
     getX: function(j) {
@@ -126,6 +179,10 @@ var MazePainter = (function(window, MazeGenerator) {
 
     getY: function(i) {
       return i * this.cellSize;
+    },
+
+    onMazePainted: function(callback) {
+      mazePaintedCallbacks.push(callback);
     }
   };
 

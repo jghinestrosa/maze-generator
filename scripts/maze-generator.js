@@ -9,6 +9,14 @@ var MazeGenerator = (function() {
   // TODO: Maybe find a better alternative
   var frontierList = [];
 
+  var solutionCallbacks = [];
+
+  function callSolutionCallbacks() {
+    solutionCallbacks.forEach(function(callback) {
+      callback();
+    });
+  }
+
   var mazeGenerator = {
 
     exposedForPainting: [],
@@ -138,9 +146,28 @@ var MazeGenerator = (function() {
     },
 
     joinTwoCellsFromMaze: function(cellFrom, cellTo) {
-      //this.getCellFromMaze(cellFrom[0], cellFrom[1]).push(cellTo);
       this.getCellFromMaze(cellFrom[0], cellFrom[1]).children.push(cellTo);
       this.getCellFromMaze(cellTo[0], cellTo[1]).parent = cellFrom;
+    },
+
+    areCellsJoined: function(cellFrom, cellTo) {
+      var joined = false;
+      this.getCellFromMaze(cellFrom[0], cellFrom[1]).children.forEach(function(cell) {
+        if (cell[0] === cellTo[0] && cell[1] === cellTo[1]) {
+          joined = true;
+        } 
+      });
+
+      if (!joined) {
+        this.getCellFromMaze(cellTo[0], cellTo[1]).children.forEach(function(cell) {
+          if (cell[0] === cellFrom[0] && cell[1] === cellFrom[1]) {
+            joined = true;
+          } 
+        });
+      }
+
+
+      return joined;
     },
 
     generate: function() {
@@ -187,13 +214,11 @@ var MazeGenerator = (function() {
     },
 
     selectEntry: function() {
-      // TODO: Choose an entry randomly
-      this.entry = [0, 0];
+      this.entry = [Math.floor(Math.random() * this.rows), 0];
     },
 
     selectExit: function() {
-      // TODO: Choose an exit randomly
-      this.exit = [this.rows - 1, this.columns - 1];
+      this.exit = [Math.floor(Math.random() * this.rows), this.columns - 1];
     },
 
     solve: function() {
@@ -201,6 +226,9 @@ var MazeGenerator = (function() {
       var pathFromExit = this.reachFirstCell(this.exit[0], this.exit[1]);
 
       this.solution = pathFromEntry.concat(pathFromExit.reverse());
+
+      callSolutionCallbacks();
+
     },
 
     reachFirstCell: function(i, j) {
@@ -214,6 +242,14 @@ var MazeGenerator = (function() {
       while(nextCell);
 
       return path;
+    },
+
+    areTheSameCell: function(cell1, cell2) {
+      return cell1[0] === cell2[0] && cell1[1] === cell2[1];
+    },
+
+    onSolved: function(callback) {
+      solutionCallbacks.push(callback);
     }
 
   };
